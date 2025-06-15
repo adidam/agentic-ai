@@ -1,0 +1,7 @@
+langgraph
+langchain
+langsmith
+langchain_groq
+dotenv
+pydantic
+lmstudio
