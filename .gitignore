@@ -1,0 +1,80 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.eggs/
+dist/
+build/
+develop-eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-log.txt
+pip-delete-this.txt
+*.egg-info/
+.installed.cfg
+*.manifest
+
+# Environments
+.venv/
+venv/
+env/
+ENV/
+.env
+*.env
+
+# PyInstaller
+#  Usually these files are written by a python script; excluding them prevents bloating the repo
+#  However, check the actual source code to make sure it is safe to exclude
+_MEIPASS*
+#  Exclude the build/ and dist/ folders, but keep the spec file
+!*.spec
+/build
+/dist
+
+# sdist/
+# wheels/
+# *.egg-info/
+# .installed.cfg
+# *.manifest
+
+# PDM
+pdm.lock
+pdm-python.lock
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.log
+*.rpt
+*.db
+
+# mypy
+mypy-report/
+mypy_cache/
+.dmypy.json
+dmypy.sock
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb.bak
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# OS or Editor Folders and Files
+.DS_Store
+Thumbs.db
