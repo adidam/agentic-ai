@@ -1,0 +1,13 @@
+langchain 
+openai 
+groq 
+langchain-core 
+langchain-community
+langchain-openai
+langchain-groq
+kiteconnect 
+python-dotenv
+pandas
+ta-lib-everywhere
+nsepython
+flask
