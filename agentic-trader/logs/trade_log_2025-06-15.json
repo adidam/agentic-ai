@@ -1,0 +1,1 @@
+{"timestamp": "2025-06-15T11:45:52.364340", "symbol": "NIFTY", "market_data": {"symbol": "NIFTY", "ohlc": {"open": 22400, "high": 22550, "low": 22300, "close": 22480}, "volume": 120000}, "agent_decision": "SELL", "reason": "Mock decision: SELL based on simple logic."}

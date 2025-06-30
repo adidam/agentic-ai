@@ -1,0 +1,41 @@
+             ┌────────────────────────────────────────┐
+             │        User Configuration (YAML/DB)    │
+             │   e.g. strategy, stock list, capital   │
+             └────────────────────────────────────────┘
+                               │
+                               ▼
+                 ┌────────────────────────┐
+                 │ Scheduler (Cron Job /  │
+                 │ CloudWatch / Local     │
+                 └────────────────────────┘
+                               │
+                               ▼
+             ┌────────────────────────────────────────┐
+             │     Trading Orchestrator (Python)      │
+             │ - Collects market data                 │
+             │ - Calls agent (LLM)                    │
+             │ - Handles decisions & risk mgmt        │
+             └────────────────────────────────────────┘
+                    │                        ▲
+                    ▼                        │
+     ┌────────────────────────┐      ┌──────────────────────┐
+     │   Broker API (e.g.     │      │     LLM Agent        │
+     │   Zerodha/Fyers)       │      │ - Reasoning          │
+     │ - Fetch OHLC, place    │─────▶│ - Entry/exit logic   │
+     │   orders               │      │ - Risk thoughts      │
+     └────────────────────────┘      └──────────────────────┘
+                    │                        │
+                    ▼                        │
+         ┌────────────────────┐              │
+         │  Trade Executor    │◄─────────────┘
+         │ - Places orders    │
+         │ - Monitors status  │
+         └────────────────────┘
+                    │
+                    ▼
+         ┌────────────────────────┐
+         │  Logging & Journal DB  │
+         │  - Trade logs          │
+         │  - Agent’s reasoning   │
+         │  - PnL & feedback loop │
+         └────────────────────────┘
