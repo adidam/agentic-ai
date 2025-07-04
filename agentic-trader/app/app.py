@@ -4,7 +4,18 @@ from dotenv import load_dotenv
 import os
 
 
-def remove_last_line_from_env(filepath="../.env"):
+app = Flask(__name__)
+
+load_dotenv('.env')
+
+# Replace with your API Key and Secret
+API_KEY = os.getenv("KITE_API_KEY")
+API_SECRET = os.getenv("KITE_API_SECRET")
+
+kite = KiteConnect(api_key=API_KEY)
+
+
+def remove_last_line_from_env(filepath=".env"):
     with open(filepath, "r") as file:
         lines = file.readlines()
 
@@ -14,24 +25,15 @@ def remove_last_line_from_env(filepath="../.env"):
     # Remove the last line
     lines = lines[:-1]
 
+    lines = [line for line in lines if line.strip()]
+
     with open(filepath, "w") as file:
         file.writelines(lines)
 
 
-app = Flask(__name__)
-
-load_dotenv('../.env')
-
-# Replace with your API Key and Secret
-API_KEY = os.getenv("KITE_API_KEY")
-API_SECRET = os.getenv("KITE_API_SECRET")
-
-kite = KiteConnect(api_key=API_KEY)
-
-
 @app.route("/")
 def home():
-    redirect('/login')
+    return redirect(url_for('login'))
 
 
 @app.route('/favicon.ico')
@@ -59,7 +61,7 @@ def redirect_handler():
 
         remove_last_line_from_env()
 
-        with open("../.env", 'a') as f:
+        with open(".env", 'a') as f:
             f.write(f"\nKITE_ACCESS_TOKEN={access_token}")
         load_dotenv(override=True)
 

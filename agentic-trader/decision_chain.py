@@ -8,7 +8,7 @@ def run_agent(ohlc_data, volume, provider="openai"):
     template = ChatPromptTemplate.from_messages([
         ("system", "You are a trading decision agent that gives cautious, well-reasoned advice."),
         ("human",
-         "Based on OHLC data: {ohlc} and volume: {volume}, should I BUY, SELL, or HOLD? Respond with one word and a reason.")
+         "Based on OHLC data: {ohlc} and volume: {volume}, should I BUY or SELL, Respond with one word and a reason.")
     ])
 
     chain = template | llm
