@@ -11,7 +11,7 @@ print(kite.login_url())  # Open this in browser
 
 api_secret = os.getenv("KITE_API_SECRET")
 access_token = os.getenv("KITE_ACCESS_TOKEN")
-access_token = 'e6BrxylF42AVgajAlp6umz0V9iWXfMpG'
+# access_token = 'e6BrxylF42AVgajAlp6umz0V9iWXfMpG'
 print(f"access token: {access_token}")
 
 if access_token == None:
@@ -24,5 +24,5 @@ if access_token == None:
 
 kite.set_access_token(access_token)
 
-print(kite.profile())
+kite.profile()
 print(f"Successfully connected to kite. {access_token}")

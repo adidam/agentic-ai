@@ -1,3 +1,3 @@
-from nse_connect import fetch_price_volume
+from kite_connect import fetch_top_volume
 
-print(fetch_price_volume('INFY'))
+print(fetch_top_volume())
