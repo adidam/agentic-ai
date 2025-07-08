@@ -19,18 +19,58 @@ def fetch_quote(symbol: str, exchange="NSE"):
     return data[f'{exchange}:{symbol}']
 
 
-def fetch_historical(symbol, segment="NSE", interval="5minute", duration="day"):
+def fetch_historical(symbol: str, segment="NSE", interval="5minute", duration=None, from_date=None, to_date=None):
     from datetime import datetime, timedelta
+
     instrument = is_valid_symbol(symbol, segment)
-    if instrument == None:
-        print("Instrument is null.")
+    if instrument is None:
+        print(f"Instrument is null for {symbol}, {segment}")
         return None
 
-    to_date = datetime.now()
-    from_date = to_date - timedelta(days=1)
+    # Determine to_date
+    if to_date is None:
+        to_date = datetime.now()
+    elif isinstance(to_date, str):
+        to_date = datetime.strptime(to_date, "%Y-%m-%d")
+
+    # Determine from_date based on duration or passed-in value
+    if from_date:
+        if isinstance(from_date, str):
+            from_date = datetime.strptime(from_date, "%Y-%m-%d")
+    elif duration:
+        # Parse duration like "1d", "5d", "1mo"
+        duration = duration.lower()
+        if duration.endswith("n"):
+            minutes = int(duration[:-1])
+            from_date = to_date - timedelta(minutes=minutes)
+        elif duration.endswith("h"):
+            hours = int(duration[:-1])
+            from_date = to_date - timedelta(hours=hours)
+        elif duration.endswith("d"):
+            days = int(duration[:-1])
+            from_date = to_date - timedelta(days=days)
+        elif duration.endswith("w"):
+            weeks = int(duration[:-1])
+            from_date = to_date - timedelta(weeks=weeks)
+        elif duration.endswith("m"):
+            months = int(duration[:-1])
+            from_date = to_date - timedelta(months=months)
+        else:
+            print("Unsupported duration format.")
+            return None
+    else:
+        # Default to last 1 day if nothing is given
+        from_date = to_date - timedelta(days=1)
+
+    # Fetch data from Kite
     data = kite.historical_data(
-        instrument["instrument_token"], from_date, to_date, interval)
-    print(f"Historical data length: {len(data)}")
+        instrument["instrument_token"],
+        from_date,
+        to_date,
+        interval
+    )
+
+    print(f"Historical data length for {symbol}: {len(data)}")
     return data if data else None
 
 

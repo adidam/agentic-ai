@@ -14,7 +14,15 @@ class BollingerBandsStrategy(BaseStrategy):
         self.last_lower = None
 
     def analyze_market(self, data):
-        close = np.array([x["close"] for x in data])
+        valid_close_prices = []
+        for x in data:
+            try:
+                valid_close_prices.append(float(x['close']))
+            except (ValueError, TypeError):
+                print(f"WARNING: invalid close price {x['close']}")
+                continue
+
+        close = np.array(valid_close_prices, dtype=np.float64)
 
         if len(close) < self.period:
             return
