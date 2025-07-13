@@ -11,3 +11,4 @@ pandas
 ta-lib-everywhere
 nsepython
 flask
+langchain-huggingface

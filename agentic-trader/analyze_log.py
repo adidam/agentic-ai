@@ -29,7 +29,7 @@ class NpEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-def log_trade_decision_json(trade_data, log_file='logs/trade_decisions.jsonl'):
+def log_trade_decision_json(trade_data, log_file='out/logs/trade_decisions.jsonl'):
     """
     Appends a trade decision (dict) as JSON to a .jsonl (JSON Lines) file.
     Each line is a separate JSON object.

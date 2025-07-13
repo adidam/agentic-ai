@@ -2,8 +2,11 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
 from langchain_groq import ChatGroq
+from langchain_huggingface import ChatHuggingFace
 import os
 from dotenv import load_dotenv
+
+from app.app import API_KEY
 
 load_dotenv()
 
@@ -19,6 +22,11 @@ def get_llm(provider="local", model="llama3-70b-8192"):
             model="gpt-4-turbo",
             temperature=0.4,
             api_key=os.getenv("OPENAI_API_KEY")
+        )
+    elif provider == "huggingface":
+        return ChatHuggingFace(
+            model='google/gemma-3-1b-it',
+            API_KEY=os.getenv("HUGGINGFACEHUB_API_TOKEN")
         )
     else:
         return ChatOpenAI(

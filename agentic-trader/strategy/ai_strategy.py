@@ -3,7 +3,7 @@ from llm_router import ask_llm
 
 
 class AIBasedStrategy(BaseStrategy):
-    def __init__(self, capital, provider="local", model="llama3-70b-8192"):
+    def __init__(self, capital, provider="groq", model="llama3-70b-8192"):
         super().__init__(capital)
         self.provider = provider
         self.model = model
