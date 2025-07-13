@@ -16,7 +16,7 @@ def benchmark_stocks(symbols: list[str] = securities) -> list:
 
     for strategy in strategies:
         for symbol in symbols:
-            data = fetch_historical(symbol, interval='15minute', duration='5d')
+            data = fetch_historical(symbol, interval='5minute', duration='5d')
             if data and len(data) > 0:
                 runner = BacktestRunner(strategy, capital=15000)
                 result = runner.run(symbol=symbol, historical_data=data)

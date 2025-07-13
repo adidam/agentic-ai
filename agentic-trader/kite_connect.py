@@ -4,7 +4,7 @@ from nse_top_n import fetch_nifty_top_n_list
 
 def list_symbols(exchange='NSE'):
     instruments = kite.instruments(exchange=exchange)
-    return [inst['tradingsymbol'] for inst in instruments]
+    return [inst['tradingsymbol'] for inst in instruments if inst['instrument_type'] == 'EQ']
 
 
 def is_valid_symbol(symbol: str, segment="NSE"):
