@@ -1,0 +1,22 @@
+I want build an automatic stock trading application with agentic ai, with an objective of minimizing losses and maximizing profits, I have an account with Zerodha stock broker and I want to make use of open source agentic framework like LangGraph and base my LLM on open source, for compute i want make use of groq, help me build the application in the following methodology
+
+1. Provide the stock analysis steps like given a stock symbol 
+	a. should do fundamental analysis if the stock is fundamentally strong 
+	b. should determine if this price is apt to buy 
+	c. if the price is right then buy the stock
+	
+2. For a list of stocks in portfolio
+	a. determine if the stock current price trend over a longer period is going up or going down
+	b. Cap the loss on a stock to 5% of the original buying price 
+	c. Sell the stock if a profit of 20% is realized
+=================================================================================
+Gemini Response
+
+(1) Research the architecture and common patterns for building agentic AI applications for algorithmic trading, specifically focusing on how frameworks like LangGraph can be utilized for decision-making and task orchestration in a trading context.
+(2) Investigate open-source Large Language Models (LLMs) that are suitable for financial analysis, including their capabilities for processing financial news, reports, and market data to assist in fundamental analysis and sentiment assessment.
+(3) Explore the integration of Groq for accelerating inference of open-source LLMs in a real-time trading environment, understanding its benefits and implementation considerations.
+(4) Identify methods and data sources for performing fundamental analysis of stocks, including key financial metrics, ratios, and qualitative factors that an AI agent would need to evaluate to determine a stock's strength and an optimal buying price.
+(5) Research techniques for technical analysis to determine long-term stock price trends, focusing on indicators and methodologies that can be automated to assess whether a stock's current price trend is upward or downward.
+(6) Understand the programmatic interfaces and APIs provided by Zerodha for executing trades (buy/sell), retrieving real-time stock prices, and accessing portfolio information, including any specific requirements for authentication and rate limits.
+(7) Develop a strategy for implementing the specified risk management rules: capping losses at 5% of the original buying price and realizing profits at 20%, detailing how these conditions would be monitored and triggered within an automated trading system.
+(8) Synthesize all gathered information to outline a comprehensive methodology for building the automatic stock trading application, integrating the agentic AI framework, open-source LLM, Groq compute, Zerodha API, and the defined stock analysis and portfolio management rules.
