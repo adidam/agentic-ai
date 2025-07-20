@@ -103,7 +103,7 @@ def random_n(items: list[str], size=10) -> list:
 
 
 def run_backtest_top10():
-    strategy_cls = [AIBasedStrategy, BollingerBandsStrategy,
+    strategy_cls = [BollingerBandsStrategy,
                     MovingAverageCrossoverStrategy, RSIStrategy, SupertrendStrategy]
     indexes = ['', 'next', 'midcap', 'smallcap']
     for cls in strategy_cls:
@@ -112,7 +112,9 @@ def run_backtest_top10():
             exchange=exchange, index_nifty=index, size=50)
         symbols = random_n(top50_list)
         decisions = backtest_strategy(cls, 15000, symbols)
+        print(f"{cls.__name__}: decisions: {len(decisions)}")
         if len(decisions) > 0:
+            print(f"Trade decision {len(symbols)}: {len(decisions)}")
             log_trade_decision_json(
                 decisions, f"logs/{cls.__name__}_{index}_decisions.jsonl")
 

@@ -2,7 +2,7 @@ from langchain.prompts import ChatPromptTemplate
 from llm_router import get_llm
 
 
-def run_agent(ohlc_data, volume, provider="groq"):
+def run_agent(ohlc_data, volume, provider="ollama"):
     llm = get_llm(provider)
 
     template = ChatPromptTemplate.from_messages([
