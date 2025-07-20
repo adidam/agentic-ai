@@ -78,4 +78,4 @@ class SupertrendStrategy(BaseStrategy):
 
     def generate_notes(self):
         context = f"Supertrend signal: {self.signal} at {self.last_candle['close']}"
-        return ask_llm(f"Explain this signal to a novice trader:\n{context}", "groq")
+        return ask_llm(f"Explain this signal to a novice trader:\n{context}", "ollama")

@@ -1,8 +1,10 @@
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
 from langchain_groq import ChatGroq
 from langchain_huggingface import ChatHuggingFace
+from langchain_ollama import ChatOllama
 import os
 from dotenv import load_dotenv
 
@@ -27,6 +29,10 @@ def get_llm(provider="local", model="llama3-70b-8192"):
         return ChatHuggingFace(
             model='google/gemma-3-1b-it',
             API_KEY=os.getenv("HUGGINGFACEHUB_API_TOKEN")
+        )
+    elif provider == "ollama":
+        return ChatOllama(
+            model='mistral'
         )
     else:
         return ChatOpenAI(
