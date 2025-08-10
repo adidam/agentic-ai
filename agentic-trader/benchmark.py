@@ -7,7 +7,7 @@ from kite_connect import fetch_historical
 from backtest_runner import BacktestRunner
 
 strategies = [BollingerBandsStrategy, MovingAverageCrossoverStrategy,
-              SupertrendStrategy, RSIStrategy]
+              RSIStrategy]  # SupertrendStrategy,
 securities = ["INFY", "TCS", "HDFCBANK", "RELIANCE"]
 
 

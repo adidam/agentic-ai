@@ -4,7 +4,7 @@ from .base_strategy import BaseStrategy
 
 
 class RSIStrategy(BaseStrategy):
-    def __init__(self, capital, rsi_period=14, oversold=30, overbought=70):
+    def __init__(self, capital, rsi_period=14.0, oversold=30, overbought=70):
         super().__init__(capital)
         self.rsi_period = rsi_period
         self.oversold = oversold
@@ -14,7 +14,7 @@ class RSIStrategy(BaseStrategy):
         self.last_candle = None
 
     def analyze_market(self, data):
-        close = np.array([x["close"] for x in data])
+        close = np.array([x["close"] for x in data], dtype=np.float64)
         self.last_candle = data[-1]
         if len(close) < self.rsi_period:
             return

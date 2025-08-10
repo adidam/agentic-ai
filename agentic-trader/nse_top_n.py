@@ -7,7 +7,7 @@ base_url = "https://www.niftyindices.com/IndexConstituent/"
 base_path = "./out/data/"
 
 
-def build_filename(index_name: str = 'nifty', top_n: int = 50) -> str:
+def build_filename(index_name: str = '', top_n: int = 50) -> str:
     # Build the filename for the CSV file
     return f"ind_nifty{index_name}{top_n}list.csv"
 
@@ -52,7 +52,8 @@ def fetch_nifty_top_n_list_web(index_name: str, top_n: int) -> list[str]:
             print(f"Error: {response.status_code} - {response.text}")
             return False
         else:
-            with open(base_path + index_name, "w") as f:
-                f.write(BytesIO(response.content))
+            buffer = BytesIO(response.content)
+            with open(base_path + index_name, "wb") as f:
+                f.write(buffer.getvalue())
                 f.close()
             return True

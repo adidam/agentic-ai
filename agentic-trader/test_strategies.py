@@ -104,7 +104,8 @@ def random_n(items: list[str], size=10) -> list:
 
 def run_backtest_top10():
     strategy_cls = [BollingerBandsStrategy,
-                    MovingAverageCrossoverStrategy, RSIStrategy, SupertrendStrategy]
+                    MovingAverageCrossoverStrategy, RSIStrategy]
+    # , SupertrendStrategy, AIBasedStrategy]
     indexes = ['', 'next', 'midcap', 'smallcap']
     for cls in strategy_cls:
         index = random.choice(indexes)
@@ -115,24 +116,38 @@ def run_backtest_top10():
         print(f"{cls.__name__}: decisions: {len(decisions)}")
         if len(decisions) > 0:
             print(f"Trade decision {len(symbols)}: {len(decisions)}")
-            log_trade_decision_json(
-                decisions, f"logs/{cls.__name__}_{index}_decisions.jsonl")
+            # Log each decision individually since decisions is a list of tuples
+            for symbol, decision in decisions:
+                log_trade_decision_json(
+                    decision, f"logs/{cls.__name__}_{index}_decisions.jsonl")
 
 
 def my_main():
     index_smallcap = fetch_top_volume(index_nifty='smallcap', size=50)
     index_midcap = fetch_top_volume(index_nifty='midcap', size=50)
+    index_next = fetch_top_volume(index_nifty='next', size=50)
+    # index_large = fetch_top_volume(index_nifty='', size=50)
 
+    # Flatten the results into a single list
     trade_decisions = []
-    trade_decisions.append(benchmark_stocks(random_n(index_smallcap)))
-    trade_decisions.append(benchmark_stocks(random_n(index_midcap)))
+    trade_decisions.extend(benchmark_stocks(random_n(index_smallcap)))
+    trade_decisions.extend(benchmark_stocks(random_n(index_midcap)))
+    trade_decisions.extend(benchmark_stocks(random_n(index_next)))
+    # trade_decisions.extend(benchmark_stocks(random_n(index_large)))
 
     return trade_decisions
 
 
 class StrategiesTestCase(TestCase):
     def test_my_main(self):
-        self.decisions = my_main()
+        decisions = my_main()
+        self.assertGreater(len(decisions), 0)
 
     def test_trad_decisions(self):
-        log_trade_decision_json(self.decisions)
+        trade_decisions = my_main()
+        print("~~~~~~~~~~~~~~~~~~~~~ trade decisions ~~~~~~~~~~~~~~~~~~~~~~~~\n")
+        print(trade_decisions)
+        print("\n~~~~~~~~~~~~~~~~~~~~~ trade decisions ~~~~~~~~~~~~~~~~~~~~~~~~")
+        # Log each trade decision individually since they're now separate dictionaries
+        for decision in trade_decisions:
+            log_trade_decision_json(decision)

@@ -52,7 +52,7 @@ class KiteSdkTestCase(TestCase):
 
         match = [inst for inst in instruments if inst['tradingsymbol'] == symbol]
 
-        self.assertIsNone(match, f"Match found for {symbol}")
+        self.assertIsNotNone(match, f"Match found for {symbol}")
 
         quote = self.kite.quote(["NSE:INFY"])
         print(f"quote: {quote}")

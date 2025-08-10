@@ -51,6 +51,20 @@ def fetch_article(url: str) -> str:
         return fetch_content(url, html_text)
 
 
+def get_html(url: str) -> str:
+    if not needs_browser(url):
+        article = Article(url)
+        article.download()
+        article.parse()
+        return article.article_html
+    else:
+        whole_html = get_rendered_html(url)
+        article = Article(url)
+        article.set_html(whole_html)
+        article.parse()
+        return article.article_html
+
+
 def fetch_content(url: str, html_content: str = None):
     try:
         article = Article(url)
@@ -60,6 +74,7 @@ def fetch_content(url: str, html_content: str = None):
             article.download()
         article.parse()
         article.nlp()
+
         return {
             "title": article.title,
             "authors": article.authors,
@@ -71,3 +86,13 @@ def fetch_content(url: str, html_content: str = None):
     except Exception as e:
         print(f"Unable to fetch the url: {e}")
         return ""
+
+
+def fetch_links(html_text: str, filter: list[str] = None) -> list[str]:
+    soup = BeautifulSoup(html_text, "lxml")
+    links = [a.get('href') for a in soup.find_all("a", href=True)]
+    print(f"found {len(links)} links")
+    filtered = links
+    if filter is not None:
+        filtered = [item for item in links if item not in filter]
+    return filtered

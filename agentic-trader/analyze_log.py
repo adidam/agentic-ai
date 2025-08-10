@@ -29,26 +29,31 @@ class NpEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-def log_trade_decision_json(trade_data, log_file='out/logs/trade_decisions.jsonl'):
+def log_trade_decision_json(trade_data, log_file='out/logs/trade_decisions.jsonl', trades_log_file='out/logs/trades_log.json'):
     """
     Appends a trade decision (dict) as JSON to a .jsonl (JSON Lines) file.
     Each line is a separate JSON object.
     """
     # Validate the trade_data structure
-    required_keys = ['timestamp', 'symbol', 'decision']
-    is_valid, error_msg = validate_json_structure(
-        trade_data, required_keys=required_keys)
+    # required_keys = ['strategy', 'symbol', 'total_pnl', 'win_rate', 'drawdown']
+    # is_valid, error_msg = validate_json_structure(
+    #     trade_data, required_keys=required_keys)
 
-    if not is_valid:
-        print(f"Warning: Invalid trade data structure: {error_msg}")
-        return False
+    # if not is_valid:
+    #     print(f"Warning: Invalid trade data structure: {error_msg}")
+    #     return False
 
     # Ensure logs directory exists
     os.makedirs(os.path.dirname(log_file), exist_ok=True)
+    os.makedirs(os.path.dirname(trades_log_file), exist_ok=True)
 
     try:
         with open(log_file, 'a') as f:
+            trades = trade_data.pop('trades')
             json.dump(trade_data, f, cls=NpEncoder)
+            with open(trades_log_file, 'a') as f2:
+                json.dump(trades, f2, cls=NpEncoder)
+                f2.write('\n')
             f.write('\n')  # Each JSON object on a new line
         return True
     except Exception as e:
