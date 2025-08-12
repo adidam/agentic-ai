@@ -22,6 +22,9 @@ def fetch_quote(symbol: str, exchange="NSE"):
 def fetch_historical(symbol: str, segment="NSE", interval="5minute", duration=None, from_date=None, to_date=None):
     from datetime import datetime, timedelta
 
+    print(
+        f"Fetching historical data for {symbol}, {segment}, {interval}, {duration}, {from_date}, {to_date}")
+
     instrument = is_valid_symbol(symbol, segment)
     if instrument is None:
         print(f"Instrument is null for {symbol}, {segment}")

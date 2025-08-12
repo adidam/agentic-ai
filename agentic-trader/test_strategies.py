@@ -14,8 +14,40 @@ from benchmark import benchmark_stocks
 import json
 import datetime
 import random
+import time
+import logging
+from config import API_DELAY, MAX_RETRIES, RETRY_DELAY, EXCHANGE, LOG_LEVEL, LOG_FORMAT
 
-exchange = "NSE"
+# Set up logging
+logging.basicConfig(level=getattr(logging, LOG_LEVEL), format=LOG_FORMAT)
+logger = logging.getLogger(__name__)
+
+exchange = EXCHANGE
+
+
+def safe_api_call(func, *args, **kwargs):
+    """
+    Wrapper function to handle API calls with rate limiting and retries
+    """
+    for attempt in range(MAX_RETRIES):
+        try:
+            result = func(*args, **kwargs)
+            time.sleep(API_DELAY)  # Rate limiting delay
+            return result
+        except Exception as e:
+            if "Too many requests" in str(e) or "rate limit" in str(e).lower():
+                if attempt < MAX_RETRIES - 1:
+                    logger.warning(
+                        f"Rate limit hit, waiting {RETRY_DELAY} seconds before retry {attempt + 1}/{MAX_RETRIES}")
+                    time.sleep(RETRY_DELAY)
+                    continue
+                else:
+                    logger.error(f"Max retries reached for rate limit: {e}")
+                    return None
+            else:
+                logger.error(f"API call failed: {e}")
+                return None
+    return None
 
 
 def get_decision_history(log_path: str = "out/logs/trade_decisions.jsonl"):
@@ -58,7 +90,11 @@ def get_decision_history(log_path: str = "out/logs/trade_decisions.jsonl"):
 
 
 def log_decision_index(index: str = "", size=50, sample_size=10):
-    top_traded = fetch_top_volume(exchange=exchange, index_nifty=index)
+    top_traded = safe_api_call(
+        fetch_top_volume, exchange=exchange, index_nifty=index)
+    if not top_traded:
+        logger.error(f"Failed to fetch top volume data for index {index}")
+        return
 
     for data in top_traded[:sample_size]:
         symbol = data['symbol']
@@ -82,11 +118,12 @@ def backtest_strategy(strategy_cls, amount, symbols: list):
     decisions = []
     runner = BacktestRunner(strategy_cls=strategy_cls, capital=amount)
     for symbol in symbols:
-        historical_data = fetch_historical(
-            symbol, interval='15minute', duration='5d')
+        historical_data = safe_api_call(
+            fetch_historical, symbol, interval='15minute', duration='5d')
         if historical_data and len(historical_data) > 0:
             print(f"records {symbol}: {len(historical_data)}")
-            decision = runner.run(symbol, historical_data=historical_data)
+            decision = runner.run(
+                symbol=symbol, historical_data=historical_data)
             if decision and decision['total_trades'] > 0:
                 decisions.append((symbol, decision))
             else:
@@ -109,8 +146,12 @@ def run_backtest_top10():
     indexes = ['', 'next', 'midcap', 'smallcap']
     for cls in strategy_cls:
         index = random.choice(indexes)
-        top50_list = fetch_top_volume(
-            exchange=exchange, index_nifty=index, size=50)
+        top50_list = safe_api_call(
+            fetch_top_volume, exchange=exchange, index_nifty=index, size=50)
+        if not top50_list:
+            logger.error(f"Failed to fetch top volume data for index {index}")
+            continue
+
         symbols = random_n(top50_list)
         decisions = backtest_strategy(cls, 15000, symbols)
         print(f"{cls.__name__}: decisions: {len(decisions)}")
@@ -123,18 +164,47 @@ def run_backtest_top10():
 
 
 def my_main():
-    index_smallcap = fetch_top_volume(index_nifty='smallcap', size=50)
-    index_midcap = fetch_top_volume(index_nifty='midcap', size=50)
-    index_next = fetch_top_volume(index_nifty='next', size=50)
-    # index_large = fetch_top_volume(index_nifty='', size=50)
+    logger.info("Starting data collection from multiple indices...")
+
+    # Fetch data from indices with delays to avoid rate limits
+    index_smallcap = safe_api_call(
+        fetch_top_volume, index_nifty='smallcap', size=50)
+    if index_smallcap:
+        logger.info(f"Fetched {len(index_smallcap)} smallcap stocks")
+
+    index_midcap = safe_api_call(
+        fetch_top_volume, index_nifty='midcap', size=50)
+    if index_midcap:
+        logger.info(f"Fetched {len(index_midcap)} midcap stocks")
+
+    index_next = safe_api_call(fetch_top_volume, index_nifty='next', size=50)
+    if index_next:
+        logger.info(f"Fetched {len(index_next)} next50 stocks")
+
+    index_large = safe_api_call(fetch_top_volume, index_nifty='', size=50)
+    if index_large:
+        logger.info(f"Fetched {len(index_large)} large cap stocks")
 
     # Flatten the results into a single list
     trade_decisions = []
-    trade_decisions.extend(benchmark_stocks(random_n(index_smallcap)))
-    trade_decisions.extend(benchmark_stocks(random_n(index_midcap)))
-    trade_decisions.extend(benchmark_stocks(random_n(index_next)))
-    # trade_decisions.extend(benchmark_stocks(random_n(index_large)))
 
+    if index_smallcap:
+        trade_decisions.extend(benchmark_stocks(random_n(index_smallcap)))
+        logger.info("Completed smallcap benchmark")
+
+    if index_midcap:
+        trade_decisions.extend(benchmark_stocks(random_n(index_midcap)))
+        logger.info("Completed midcap benchmark")
+
+    if index_next:
+        trade_decisions.extend(benchmark_stocks(random_n(index_next)))
+        logger.info("Completed next50 benchmark")
+
+    if index_large:
+        trade_decisions.extend(benchmark_stocks(random_n(index_large)))
+        logger.info("Completed large cap benchmark")
+
+    logger.info(f"Total trade decisions collected: {len(trade_decisions)}")
     return trade_decisions
 
 
