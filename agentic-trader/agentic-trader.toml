@@ -33,3 +33,9 @@ dependencies = [
     "langchain-huggingface",
     "langchain-ollama",
 ]
+[tools.pytest.ini_options]
+minVersion = "6.0"
+addopts = "--strict-markers"
+testpaths = [
+  "tests"
+]
