@@ -28,6 +28,7 @@ def safe_fetch_historical(symbol, interval=HISTORICAL_INTERVAL, duration=HISTORI
             time.sleep(API_DELAY)  # Rate limiting delay
             return result
         except Exception as e:
+            print(f"Error fetching historical data for {symbol}: {e}")
             if "Too many requests" in str(e) or "rate limit" in str(e).lower():
                 if attempt < MAX_RETRIES - 1:
                     logger.warning(

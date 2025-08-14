@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentic-trader"
+version = "0.1.0"
+description = "An agentic trader tool Python project to trade on indian stocks with zerodha broker."
+authors = [{name = "Prakash Adidam", email = "adidam@gmail.com"}]
+readme = "README.md"
+license = "MIT AND (Apache-2.0 OR BSD-2-Clause)"
+requires-python = ">=3.8"
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python"
+]
+dependencies = [
+    "requests",
+    "langchain", 
+    "openai", 
+    "groq", 
+    "langchain-core", 
+    "langchain-community",
+    "langchain-openai",
+    "langchain-groq",
+    "langgraph",
+    "kiteconnect", 
+    "python-dotenv",
+    "pandas",
+    "ta-lib-everywhere",
+    "nsepython",
+    "flask",
+    "langchain-huggingface",
+    "langchain-ollama",
+]
