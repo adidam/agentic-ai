@@ -32,6 +32,7 @@ dependencies = [
     "flask",
     "langchain-huggingface",
     "langchain-ollama",
+    "yfinance",
 ]
 [tools.pytest.ini_options]
 minVersion = "6.0"

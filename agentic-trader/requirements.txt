@@ -14,3 +14,5 @@ nsepython
 flask
 langchain-huggingface
 langchain-ollama
+schedule
+yfinance
